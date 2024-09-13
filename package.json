@@ -1,0 +1,30 @@
+{
+  "name": "web-vr",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "element-plus": "^2.8.1",
+    "pinia": "^2.2.2",
+    "scss": "^0.2.4",
+    "three": "^0.166.1",
+    "vue": "^3.4.29",
+    "vue-router": "^4.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
+    "eslint": "^9.6.0",
+    "eslint-plugin-vue": "^9.27.0",
+    "sass": "^1.77.7",
+    "sass-loader": "^14.2.1",
+    "unplugin-auto-import": "^0.18.2",
+    "unplugin-vue-components": "^0.27.4",
+    "vite": "^5.3.1"
+  }
+}

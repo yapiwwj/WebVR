@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Document</title>
+    <style>
+        * {
+            /* width: 100vw;
+            height: 100vh; */
+            margin: 0;
+            padding: 0;
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: transparent;
+        }
+
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const particlesArray = [];
+    let hue = 0;
+
+    window.addEventListener("resize", function () {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    const mouse = {
+        x: undefined,
+        y: undefined
+    }
+
+    canvas.addEventListener('click', function (e) {
+        mouse.x = e.x;
+        mouse.y = e.y;
+        for (let i = 0; i < 10; i++) {
+            particlesArray.push(new Particle());
+        }
+    })
+
+    canvas.addEventListener('mousemove', function (e) {
+        mouse.x = e.x;
+        mouse.y = e.y;
+        for (let i = 0; i < 5; i++) {
+            particlesArray.push(new Particle());
+        }
+    })
+
+    class Particle {
+        constructor() {
+            this.x = mouse.x
+            this.y = mouse.y
+            this.size = Math.random() * 15 + 1;
+            this.speedX = Math.random() * 3 - 1.5;
+            this.speedY = Math.random() * 3 - 1.5;
+            this.density = (Math.random() * 30) + 1;
+            // this.color = "hsl(" + hue + ", 100%, 50%)";
+            this.color = this.generateColor();
+        }
+
+        generateColor() {
+            const minHue = 200;
+            const maxHue = 320;
+            const hueRange = maxHue - minHue;
+            const randomHue = minHue + Math.random() * hueRange;
+            return `hsl(${randomHue}, 100%, 82%)`;
+        }
+
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            if (this.size > 0.2) this.size -= 0.1;
+        }
+
+        draw() {
+            ctx.fillStyle = this.color;
+            // ctx.fillStyle = "white";
+            ctx.beginPath()
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
+            ctx.fill()
+        }
+    }
+
+
+    function handleParticles() {
+        for (let i = 0; i < particlesArray.length; i++) {
+            particlesArray[i].update();
+            particlesArray[i].draw();
+            for (let j = i; j < particlesArray.length; j++) {
+                const dx = particlesArray[i].x - particlesArray[j].x;
+                const dy = particlesArray[i].y - particlesArray[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 100) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = particlesArray[i].color;
+                    ctx.lineWidth = particlesArray[i].size / 15;
+                    ctx.moveTo(particlesArray[i].x, particlesArray[i].y)
+                    ctx.lineTo(particlesArray[j].x, particlesArray[j].y)
+                    ctx.stroke()
+                    ctx.closePath()
+                }
+            }
+            if (particlesArray[i].size <= 0.3) {
+                particlesArray.splice(i, 1)
+                i--;
+            }
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        handleParticles()
+        hue += 1;
+        requestAnimationFrame(animate)
+    }
+
+    animate()
+</script>
+</body>
+</html>
